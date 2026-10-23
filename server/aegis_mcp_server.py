@@ -100,6 +100,7 @@ def create_app():
     server_app = mcp.http_app(
         path="/mcp",
         transport="streamable-http",
+        session_idle_timeout=3600.0,
         middleware=[Middleware(OriginGuard), Middleware(WireLog)],
     )
 

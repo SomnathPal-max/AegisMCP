@@ -46,7 +46,7 @@ def _next_id() -> int:
     return _request_id
 
 
-async def _mcp_call(method: str, params: dict | None = None) -> dict:
+async def _mcp_call(method: str, params: dict | None = None, is_retry: bool = False) -> dict:
     """Send a JSON-RPC request to the MCP server and return the result."""
     global _session_id
 
@@ -63,7 +63,7 @@ async def _mcp_call(method: str, params: dict | None = None) -> dict:
         "Accept": "application/json, text/event-stream",
         "Origin": f"http://localhost:{HOST_PORT}",
     }
-    if _session_id:
+    if _session_id and method != "initialize":
         headers["Mcp-Session-Id"] = _session_id
 
     async with httpx.AsyncClient(timeout=30.0) as client:
@@ -72,6 +72,13 @@ async def _mcp_call(method: str, params: dict | None = None) -> dict:
         # Capture session ID from response
         if "mcp-session-id" in resp.headers:
             _session_id = resp.headers["mcp-session-id"]
+
+        # Handle session expiration / 404 Session not found seamlessly
+        if resp.status_code == 404 or (resp.status_code != 200 and "Session not found" in resp.text):
+            if not is_retry:
+                _session_id = None  # Reset expired session
+                await _ensure_initialized()  # Perform handshake to acquire new session
+                return await _mcp_call(method, params, is_retry=True)  # Retry with fresh session
 
         if resp.status_code != 200:
             return {"error": f"MCP server returned {resp.status_code}", "body": resp.text}
@@ -101,7 +108,7 @@ async def _ensure_initialized():
     if _session_id:
         return
 
-    # Initialize
+    # Initialize with fresh handshake
     result = await _mcp_call("initialize", {
         "protocolVersion": "2025-11-25",
         "capabilities": {},

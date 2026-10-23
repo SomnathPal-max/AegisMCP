@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "generated_utc": "2026-10-23T11:47:11.810735+00:00",
+    "claim_reference_id": "CLM-9054EF61",
+    "status": "DRAFT_FOR_YOUR_REVIEW",
+    "disclaimer": "This claim packet is a SIMULATED draft for review purposes only. It does not constitute legal or insurance advice. All sensor readings, device states, and policy data are SIMULATED."
+  },
+  "claim": {
+    "claim_reference_id": "CLM-9054EF61",
+    "emergency_type": "gas_leak",
+    "timestamp_utc": "2026-10-23T11:47:11.810150+00:00",
+    "safety_guidance": "1. Do NOT turn on/off any electrical switches or appliances.\n2. Do NOT light matches, lighters, or candles.\n3. Open windows and doors if safe to do so.\n4. Leave the house immediately and call 911 from outside.\n5. Gas valves will be shut off automatically.",
+    "iot_containment_actions": [
+      "Closed main gas shutoff valve [SIMULATED]",
+      "Closed water heater gas valve [SIMULATED]",
+      "Shut down HVAC to prevent gas circulation [SIMULATED]"
+    ],
+    "current_iot_state": {
+      "main_water_valve": "OPEN",
+      "water_heater_valve": "OPEN",
+      "smart_breaker_main": "ACTIVE",
+      "smart_breaker_zone_3": "ACTIVE",
+      "gas_main_valve": "CLOSED_BY_AEGIS",
+      "gas_water_heater_valve": "CLOSED_BY_AEGIS",
+      "hvac_system": "SHUTDOWN_BY_AEGIS",
+      "hvac_thermostat": "AUTO",
+      "front_door_lock": "LOCKED",
+      "back_door_lock": "LOCKED",
+      "garage_door": "CLOSED",
+      "alarm_system": "ARMED_HOME",
+      "security_cameras": "RECORDING",
+      "smoke_detectors": "NORMAL",
+      "co_detectors": "NORMAL",
+      "sprinkler_system": "STANDBY",
+      "refrigerator": "RUNNING",
+      "washing_machine": "IDLE",
+      "dryer": "IDLE",
+      "dishwasher": "IDLE",
+      "oven": "OFF"
+    },
+    "sensor_snapshot": {
+      "basement_humidity_pct": 45.2,
+      "basement_temperature_f": 68.0,
+      "water_flow_rate_gpm": 0.0,
+      "water_pressure_psi": 55.0,
+      "gas_level_ppm": 450.0,
+      "co_level_ppm": 0.0,
+      "smoke_density_pct": 0.0,
+      "indoor_temperature_f": 72.0,
+      "outdoor_temperature_f": 58.0,
+      "electrical_load_kw": 4.2,
+      "voltage_v": 120.0,
+      "last_updated": "2026-10-23T11:47:11.810123+00:00",
+      "timestamp": "2026-10-23T11:47:11.810123+00:00",
+      "emergency_type": "gas_leak",
+      "simulated": true
+    },
+    "policy_arbitration": {
+      "clause": "Section 7.3.a \u2014 Gas Line Leak & Emergency Shutoff Coverage [SIMULATED]",
+      "covered": true,
+      "deductible_usd": 0,
+      "warranty_warning": "Gas line repairs must be performed by a licensed technician. DIY repair voids coverage and is illegal in most jurisdictions. [SIMULATED]",
+      "dispatch_suggestion": "Local Gas Company Emergency Line + Licensed Gas Fitter (ETA ~15 min) [SIMULATED]"
+    },
+    "user_observation": "I smell gas!",
+    "simulated_components": [
+      "iot_devices",
+      "sensors",
+      "insurance_policy",
+      "warranty_terms",
+      "dispatch_vendor"
+    ],
+    "disclaimer": "This is a SIMULATED emergency response. In a real emergency, call 911 or your local emergency services immediately."
+  },
+  "sensor_time_series": [
+    {
+      "basement_humidity_pct": 45.2,
+      "basement_temperature_f": 68.0,
+      "water_flow_rate_gpm": 0.0,
+      "water_pressure_psi": 55.0,
+      "gas_level_ppm": 450.0,
+      "co_level_ppm": 0.0,
+      "smoke_density_pct": 0.0,
+      "indoor_temperature_f": 72.0,
+      "outdoor_temperature_f": 58.0,
+      "electrical_load_kw": 4.2,
+      "voltage_v": 120.0,
+      "last_updated": "2026-10-23T11:47:11.810123+00:00",
+      "timestamp": "2026-10-23T11:47:11.810123+00:00",
+      "emergency_type": "gas_leak",
+      "simulated": true
+    }
+  ],
+  "all_stored_analyses": {}
+}

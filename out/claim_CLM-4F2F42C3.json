@@ -1,0 +1,145 @@
+{
+  "meta": {
+    "generated_utc": "2026-10-23T11:40:54.779597+00:00",
+    "claim_reference_id": "CLM-4F2F42C3",
+    "status": "DRAFT_FOR_YOUR_REVIEW",
+    "disclaimer": "This claim packet is a SIMULATED draft for review purposes only. It does not constitute legal or insurance advice. All sensor readings, device states, and policy data are SIMULATED."
+  },
+  "claim": {
+    "claim_reference_id": "CLM-4F2F42C3",
+    "emergency_type": "gas_leak",
+    "timestamp_utc": "2026-10-23T11:40:54.431342+00:00",
+    "safety_guidance": "1. Do NOT turn on/off any electrical switches or appliances.\n2. Do NOT light matches, lighters, or candles.\n3. Open windows and doors if safe to do so.\n4. Leave the house immediately and call 911 from outside.\n5. Gas valves will be shut off automatically.",
+    "iot_containment_actions": [
+      "Closed main gas shutoff valve [SIMULATED]",
+      "Closed water heater gas valve [SIMULATED]",
+      "Shut down HVAC to prevent gas circulation [SIMULATED]"
+    ],
+    "current_iot_state": {
+      "main_water_valve": "OPEN",
+      "water_heater_valve": "OPEN",
+      "smart_breaker_main": "ACTIVE",
+      "smart_breaker_zone_3": "ACTIVE",
+      "gas_main_valve": "CLOSED_BY_AEGIS",
+      "gas_water_heater_valve": "CLOSED_BY_AEGIS",
+      "hvac_system": "SHUTDOWN_BY_AEGIS",
+      "hvac_thermostat": "AUTO",
+      "front_door_lock": "LOCKED",
+      "back_door_lock": "LOCKED",
+      "garage_door": "CLOSED",
+      "alarm_system": "ARMED_HOME",
+      "security_cameras": "RECORDING",
+      "smoke_detectors": "NORMAL",
+      "co_detectors": "NORMAL",
+      "sprinkler_system": "STANDBY",
+      "refrigerator": "RUNNING",
+      "washing_machine": "IDLE",
+      "dryer": "IDLE",
+      "dishwasher": "IDLE",
+      "oven": "OFF"
+    },
+    "sensor_snapshot": {
+      "basement_humidity_pct": 45.2,
+      "basement_temperature_f": 68.0,
+      "water_flow_rate_gpm": 0.0,
+      "water_pressure_psi": 55.0,
+      "gas_level_ppm": 450.0,
+      "co_level_ppm": 0.0,
+      "smoke_density_pct": 0.0,
+      "indoor_temperature_f": 72.0,
+      "outdoor_temperature_f": 58.0,
+      "electrical_load_kw": 4.2,
+      "voltage_v": 120.0,
+      "last_updated": "2026-10-23T11:40:54.431278+00:00",
+      "timestamp": "2026-10-23T11:40:54.431278+00:00",
+      "emergency_type": "gas_leak",
+      "simulated": true
+    },
+    "policy_arbitration": {
+      "clause": "Section 7.3.a \u2014 Gas Line Leak & Emergency Shutoff Coverage [SIMULATED]",
+      "covered": true,
+      "deductible_usd": 0,
+      "warranty_warning": "Gas line repairs must be performed by a licensed technician. DIY repair voids coverage and is illegal in most jurisdictions. [SIMULATED]",
+      "dispatch_suggestion": "Local Gas Company Emergency Line + Licensed Gas Fitter (ETA ~15 min) [SIMULATED]"
+    },
+    "user_observation": "I smell gas in the kitchen!",
+    "simulated_components": [
+      "iot_devices",
+      "sensors",
+      "insurance_policy",
+      "warranty_terms",
+      "dispatch_vendor"
+    ],
+    "disclaimer": "This is a SIMULATED emergency response. In a real emergency, call 911 or your local emergency services immediately."
+  },
+  "sensor_time_series": [
+    {
+      "basement_humidity_pct": 45.2,
+      "basement_temperature_f": 68.0,
+      "water_flow_rate_gpm": 0.0,
+      "water_pressure_psi": 55.0,
+      "gas_level_ppm": 450.0,
+      "co_level_ppm": 0.0,
+      "smoke_density_pct": 0.0,
+      "indoor_temperature_f": 72.0,
+      "outdoor_temperature_f": 58.0,
+      "electrical_load_kw": 4.2,
+      "voltage_v": 120.0,
+      "last_updated": "2026-10-23T11:40:54.431278+00:00",
+      "timestamp": "2026-10-23T11:40:54.431278+00:00",
+      "emergency_type": "gas_leak",
+      "simulated": true
+    }
+  ],
+  "all_stored_analyses": {
+    "scam_2026-10-23T11:40:54.102542+00:00": {
+      "method": "text-heuristic",
+      "threat_level": "CRITICAL_SCAM",
+      "risk_score": 99,
+      "claimed_institution": "Chase",
+      "caller_number": "+1-800-555-0199",
+      "number_check": {
+        "simulated": true,
+        "match": false,
+        "detail": "Caller number +1-800-555-0199 does NOT match any official Chase numbers: ['+1-800-935-9935', '+1-713-262-3300']"
+      },
+      "matched_markers": [
+        "Classic 'move funds to a safe reserve account' scam script",
+        "Legal intimidation / false law-enforcement threat",
+        "Artificial time-pressure coercion marker"
+      ],
+      "matched_markers_detail": [
+        {
+          "phrase": "safe account",
+          "reason": "Classic 'move funds to a safe reserve account' scam script",
+          "weight": 45
+        },
+        {
+          "phrase": "arrest warrant",
+          "reason": "Legal intimidation / false law-enforcement threat",
+          "weight": 40
+        },
+        {
+          "phrase": "immediately",
+          "reason": "Artificial time-pressure coercion marker",
+          "weight": 15
+        }
+      ],
+      "spoken_interjection": "Warning: This call shows a 99% match with known Chase impersonation scams. Do not share any codes, passwords, or move money. Hang up and call the official number yourself.",
+      "safe_next_steps": [
+        "Hang up the call immediately.",
+        "Call Chase directly using the number on your card or their official website.",
+        "Never share verification codes, passwords, or Social Security numbers over the phone.",
+        "Never buy gift cards or send wire transfers based on a phone call.",
+        "Report the call to the FTC at reportfraud.ftc.gov."
+      ],
+      "counter_questions": [
+        "Ask the caller: 'What are the last 4 digits of my Chase account?'",
+        "Say: 'I am hanging up now and calling the official number on the back of my card.'"
+      ],
+      "simulated_components": [
+        "phone_directory"
+      ]
+    }
+  }
+}

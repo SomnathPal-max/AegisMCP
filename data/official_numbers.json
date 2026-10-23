@@ -1,0 +1,48 @@
+{
+  "_meta": {
+    "description": "SIMULATED directory of official institution phone numbers for scam-call cross-check",
+    "simulated": true
+  },
+  "institutions": {
+    "Chase": {
+      "official_numbers": ["+1-800-935-9935", "+1-713-262-3300"],
+      "fraud_department": "+1-800-935-9935"
+    },
+    "Bank of America": {
+      "official_numbers": ["+1-800-432-1000", "+1-800-732-9194"],
+      "fraud_department": "+1-800-432-1000"
+    },
+    "Wells Fargo": {
+      "official_numbers": ["+1-800-869-3557", "+1-800-225-5935"],
+      "fraud_department": "+1-800-869-3557"
+    },
+    "IRS": {
+      "official_numbers": ["+1-800-829-1040"],
+      "fraud_department": "+1-800-829-1040"
+    },
+    "Social Security Administration": {
+      "official_numbers": ["+1-800-772-1213"],
+      "fraud_department": "+1-800-772-1213"
+    },
+    "Medicare": {
+      "official_numbers": ["+1-800-633-4227"],
+      "fraud_department": "+1-800-633-4227"
+    },
+    "Amazon": {
+      "official_numbers": ["+1-888-280-4331"],
+      "fraud_department": "+1-888-280-4331"
+    },
+    "Microsoft": {
+      "official_numbers": ["+1-800-642-7676"],
+      "fraud_department": "+1-800-642-7676"
+    },
+    "Local Power Company": {
+      "official_numbers": ["+1-800-555-0100"],
+      "fraud_department": "+1-800-555-0100"
+    },
+    "Local Gas Company": {
+      "official_numbers": ["+1-800-555-0200"],
+      "fraud_department": "+1-800-555-0200"
+    }
+  }
+}

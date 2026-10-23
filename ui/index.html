@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alexa+ | AegisMCP — Household Crisis Console</title>
+    <style>
+        :root {
+            --primary: #232f3e;
+            --accent: #00a8e1;
+            --accent-dark: #0073bb;
+            --danger: #d13212;
+            --warning: #ff9900;
+            --success: #1d8102;
+            --bg: #f5f7fa;
+            --card: #ffffff;
+            --text: #16191f;
+            --text-light: #687078;
+            --border: #d5dbdb;
+            --code-bg: #1b2838;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Amazon Ember', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        /* Header */
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .header h1 { font-size: 20px; font-weight: 600; }
+        .header h1 span { color: var(--accent); }
+        .header .subtitle { font-size: 12px; color: #adb5bd; margin-top: 2px; }
+        .header-actions { display: flex; gap: 8px; align-items: center; }
+        .badge {
+            padding: 3px 10px; border-radius: 12px; font-size: 11px;
+            font-weight: 600; text-transform: uppercase;
+        }
+        .badge-live { background: var(--success); color: white; }
+        .badge-sim { background: var(--warning); color: var(--primary); }
+        .btn-reset {
+            background: var(--danger); color: white; border: none;
+            padding: 6px 16px; border-radius: 4px; cursor: pointer;
+            font-size: 13px; font-weight: 600;
+        }
+        .btn-reset:hover { opacity: 0.9; }
+
+        /* Main layout */
+        .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; max-width: 1600px; margin: 0 auto; }
+        @media (max-width: 1024px) { .main { grid-template-columns: 1fr; } }
+
+        /* Cards */
+        .card {
+            background: var(--card); border-radius: 8px; padding: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08); border: 1px solid var(--border);
+        }
+        .card h2 {
+            font-size: 16px; font-weight: 700; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .card h2 .icon { font-size: 20px; }
+
+        /* Tabs */
+        .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 16px; }
+        .tab {
+            padding: 8px 20px; cursor: pointer; font-size: 13px; font-weight: 600;
+            color: var(--text-light); border-bottom: 2px solid transparent;
+            margin-bottom: -2px; transition: all 0.2s;
+        }
+        .tab:hover { color: var(--accent); }
+        .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Forms */
+        .form-group { margin-bottom: 12px; }
+        .form-group label {
+            display: block; font-size: 13px; font-weight: 600;
+            margin-bottom: 4px; color: var(--text);
+        }
+        .form-group select, .form-group input, .form-group textarea {
+            width: 100%; padding: 8px 12px; border: 1px solid var(--border);
+            border-radius: 4px; font-size: 14px; font-family: inherit;
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-group select { cursor: pointer; }
+
+        .btn-primary {
+            background: var(--accent); color: white; border: none;
+            padding: 10px 24px; border-radius: 4px; cursor: pointer;
+            font-size: 14px; font-weight: 600; width: 100%;
+            transition: background 0.2s;
+        }
+        .btn-primary:hover { background: var(--accent-dark); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Results */
+        .result-box {
+            margin-top: 16px; border-radius: 6px; overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .result-header {
+            padding: 10px 16px; font-weight: 700; font-size: 14px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .result-body { padding: 16px; }
+        .result-critical { background: #fdf2f2; }
+        .result-critical .result-header { background: var(--danger); color: white; }
+        .result-suspicious { background: #fef9e7; }
+        .result-suspicious .result-header { background: var(--warning); color: var(--primary); }
+        .result-safe { background: #f0fdf4; }
+        .result-safe .result-header { background: var(--success); color: white; }
+        .result-info { background: #f0f8ff; }
+        .result-info .result-header { background: var(--accent); color: white; }
+
+        /* Threat gauge */
+        .gauge-container { margin: 12px 0; }
+        .gauge-bar {
+            height: 28px; border-radius: 14px; background: #e9ecef;
+            overflow: hidden; position: relative;
+        }
+        .gauge-fill {
+            height: 100%; border-radius: 14px; transition: width 0.8s ease;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 14px;
+        }
+        .gauge-low { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+        .gauge-mid { background: linear-gradient(90deg, #f39c12, #e67e22); }
+        .gauge-high { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+
+        /* Markers list */
+        .markers-list { list-style: none; }
+        .markers-list li {
+            padding: 6px 0; border-bottom: 1px solid #eee;
+            font-size: 13px; display: flex; align-items: flex-start; gap: 6px;
+        }
+        .markers-list li:last-child { border-bottom: none; }
+
+        /* IoT Status Grid */
+        .iot-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px; margin-top: 8px;
+        }
+        .iot-device {
+            padding: 8px 12px; border-radius: 4px; font-size: 12px;
+            border: 1px solid var(--border); display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .iot-device .dev-name { font-weight: 600; }
+        .iot-device .dev-state { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+        .state-normal { background: #d4edda; color: #155724; }
+        .state-alert { background: #f8d7da; color: #721c24; }
+        .state-action { background: #fff3cd; color: #856404; }
+
+        /* Progress steps */
+        .progress-steps { margin: 12px 0; }
+        .progress-step {
+            display: flex; align-items: center; gap: 8px; padding: 6px 0;
+            font-size: 13px;
+        }
+        .progress-step .step-icon {
+            width: 24px; height: 24px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; flex-shrink: 0;
+        }
+        .step-done .step-icon { background: var(--success); color: white; }
+        .step-pending .step-icon { background: #e9ecef; color: var(--text-light); }
+
+        /* Wire panel */
+        .wire-panel {
+            background: var(--code-bg); color: #e2e8f0;
+            border-radius: 6px; padding: 16px; font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: 12px; max-height: 500px; overflow-y: auto;
+        }
+        .wire-entry {
+            padding: 8px 0; border-bottom: 1px solid #2d3748;
+        }
+        .wire-entry:last-child { border-bottom: none; }
+        .wire-method { color: #68d391; font-weight: 700; }
+        .wire-path { color: #63b3ed; }
+        .wire-status { font-weight: 700; }
+        .wire-200 { color: #68d391; }
+        .wire-403 { color: #fc8181; }
+        .wire-500 { color: #f56565; }
+        .wire-time { color: #a0aec0; font-size: 11px; }
+
+        /* JSON display */
+        .json-display {
+            background: var(--code-bg); color: #e2e8f0;
+            border-radius: 6px; padding: 16px; font-family: 'Cascadia Code', monospace;
+            font-size: 12px; max-height: 400px; overflow: auto;
+            white-space: pre-wrap; word-break: break-word;
+        }
+
+        /* Disclaimer */
+        .disclaimer {
+            background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;
+            padding: 10px 16px; font-size: 12px; color: #856404; margin-top: 12px;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block; width: 20px; height: 20px;
+            border: 3px solid #e9ecef; border-top-color: var(--accent);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Emergency type cards */
+        .emergency-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px; margin-bottom: 12px;
+        }
+        .emergency-option {
+            padding: 12px; border: 2px solid var(--border); border-radius: 8px;
+            cursor: pointer; text-align: center; transition: all 0.2s;
+            font-size: 13px;
+        }
+        .emergency-option:hover { border-color: var(--accent); background: #f0f8ff; }
+        .emergency-option.selected { border-color: var(--accent); background: #e3f2fd; }
+        .emergency-option .em-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+        .emergency-option .em-label { font-weight: 600; }
+
+        /* Spoken interjection */
+        .spoken-box {
+            background: #e8eaf6; border-left: 4px solid #3f51b5;
+            padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0;
+            font-style: italic; font-size: 14px;
+        }
+        .spoken-box::before { content: '🗣️ Alexa says: '; font-style: normal; font-weight: 700; }
+
+        /* Footer tabs */
+        .footer-tabs { margin-top: 16px; grid-column: 1 / -1; }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <div>
+        <h1>🔵 Alexa+ <span>AegisMCP</span> — Household Crisis Console</h1>
+        <div class="subtitle">
+            Self-hosted MCP Server (Spec 2025-11-25 • Streamable HTTP <code>/mcp</code>) + AWS Strands SDK & Amazon Bedrock
+        </div>
+    </div>
+    <div class="header-actions">
+        <span class="badge badge-live">MCP LIVE</span>
+        <span class="badge badge-sim">DEVICES SIMULATED</span>
+        <button class="btn-reset" onclick="resetDemo()">🔄 Reset Demo</button>
+    </div>
+</div>
+
+<!-- Main content -->
+<div class="main">
+
+    <!-- LEFT: Scenarios -->
+    <div class="card">
+        <h2><span class="icon">🎙️</span> Alexa+ Crisis & Scam Scenarios</h2>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('scam')">🛡️ Scam Firewall</div>
+            <div class="tab" onclick="switchTab('emergency')">🏠 Home Emergency</div>
+            <div class="tab" onclick="switchTab('claim')">📋 Claim Packet</div>
+        </div>
+
+        <!-- Scam Tab -->
+        <div id="tab-scam" class="tab-content active">
+            <div class="form-group">
+                <label>Claimed Institution</label>
+                <input type="text" id="scam-institution" value="Chase Fraud Department">
+            </div>
+            <div class="form-group">
+                <label>Caller Phone Number</label>
+                <input type="text" id="scam-number" value="+1-800-555-0199">
+            </div>
+            <div class="form-group">
+                <label>Live Speakerphone Transcript</label>
+                <textarea id="scam-transcript">Ma'am, there is an active arrest warrant and unauthorized wire transfer on your account. Stay on the line immediately and transfer your balance to our Federal Reserve safe account or buy Apple gift cards to freeze the ledger. Read me your verification code now.</textarea>
+            </div>
+            <button class="btn-primary" onclick="runScamCheck()" id="btn-scam">
+                🚨 "Alexa, verify this caller with Aegis"
+            </button>
+
+            <div id="scam-result"></div>
+        </div>
+
+        <!-- Emergency Tab -->
+        <div id="tab-emergency" class="tab-content">
+            <div class="form-group">
+                <label>Select Emergency Type</label>
+            </div>
+            <div class="emergency-grid" id="emergency-grid">
+                <!-- Populated by JS -->
+            </div>
+            <div class="form-group">
+                <label>What's happening? (voice command to Alexa)</label>
+                <textarea id="emergency-observation">My basement water heater just ruptured and water is pooling near the furnace! Should I unbolt the bottom valve myself?</textarea>
+            </div>
+            <div class="form-group" id="confirm-electrical-group" style="display:none;">
+                <label>
+                    <input type="checkbox" id="confirm-electrical">
+                    Confirm electrical isolation (required for electrical emergencies)
+                </label>
+            </div>
+            <button class="btn-primary" onclick="runEmergency()" id="btn-emergency">
+                🌊 Trigger Alexa+ Emergency Response
+            </button>
+
+            <div id="emergency-result"></div>
+        </div>
+
+        <!-- Claim Tab -->
+        <div id="tab-claim" class="tab-content">
+            <div class="form-group">
+                <label>Claim Reference ID (leave blank for latest)</label>
+                <input type="text" id="claim-id" placeholder="CLM-XXXXXXXX">
+            </div>
+            <button class="btn-primary" onclick="runCompileClaim()" id="btn-claim">
+                📋 Compile Forensic Claim Packet
+            </button>
+            <div id="claim-result"></div>
+        </div>
+
+        <div class="disclaimer">
+            ⚠️ <strong>Disclaimer:</strong> AegisMCP is a hackathon prototype. It does not provide legal,
+            insurance, or emergency advice. All IoT devices, sensors, policies, and phone numbers are
+            <strong>SIMULATED</strong>. In a real emergency, call 911.
+        </div>
+    </div>
+
+    <!-- RIGHT: Wire Inspector + IoT + Real-vs-Simulated -->
+    <div class="card">
+        <h2><span class="icon">📡</span> MCP 2025-11-25 Inspector</h2>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchRightTab('wire')">📡 Wire Log</div>
+            <div class="tab" onclick="switchRightTab('iot')">🏠 IoT Devices</div>
+            <div class="tab" onclick="switchRightTab('response')">📦 Last Response</div>
+            <div class="tab" onclick="switchRightTab('realvssim')">✅ Real vs Simulated</div>
+        </div>
+
+        <!-- Wire Log -->
+        <div id="rtab-wire" class="tab-content active">
+            <div class="wire-panel" id="wire-log">
+                <div style="color: #a0aec0;">Waiting for MCP traffic...</div>
+            </div>
+        </div>
+
+        <!-- IoT Devices -->
+        <div id="rtab-iot" class="tab-content">
+            <div class="iot-grid" id="iot-grid">
+                <div style="color: var(--text-light);">Run an emergency scenario to see device states.</div>
+            </div>
+        </div>
+
+        <!-- Last Response JSON -->
+        <div id="rtab-response" class="tab-content">
+            <div class="json-display" id="last-response">No response yet.</div>
+        </div>
+
+        <!-- Real vs Simulated -->
+        <div id="rtab-realvssim" class="tab-content">
+            <h3 style="margin-bottom: 12px;">✅ What's REAL</h3>
+            <ul style="font-size: 13px; margin-bottom: 16px; padding-left: 20px;">
+                <li><strong>MCP Protocol:</strong> Streamable HTTP on <code>/mcp</code>, spec 2025-11-25</li>
+                <li><strong>Tool Calls:</strong> Real JSON-RPC over the wire</li>
+                <li><strong>Origin Validation:</strong> HTTP 403 for disallowed origins</li>
+                <li><strong>Wire Log:</strong> Real HTTP request/response metadata</li>
+                <li><strong>Scam Analysis:</strong> Real heuristic text analysis</li>
+                <li><strong>Claim Files:</strong> Real JSON + PDF written to <code>out/</code></li>
+                <li><strong>Bedrock Calls:</strong> Real API calls when credentials present</li>
+            </ul>
+            <h3 style="margin-bottom: 12px;">🔶 What's SIMULATED</h3>
+            <ul style="font-size: 13px; padding-left: 20px;">
+                <li><strong>Alexa+ Console:</strong> This web UI</li>
+                <li><strong>IoT Devices:</strong> Valves, breakers, locks, detectors, thermostats</li>
+                <li><strong>Sensors:</strong> Humidity, flow, temperature, CO, smoke</li>
+                <li><strong>Insurance Policy:</strong> Fixture data — not legal advice</li>
+                <li><strong>Phone Directory:</strong> Small set of demo numbers</li>
+                <li><strong>Dispatch Vendors:</strong> Fictional company names</li>
+                <li><strong>Warranty Terms:</strong> Fictional clauses</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ----- Emergency types config -----
+    const EMERGENCY_TYPES = [
+        { type: 'water_heater_rupture', icon: '🚿', label: 'Water Heater', obs: 'My water heater just ruptured and water is flooding the basement!' },
+        { type: 'electrical_surge', icon: '⚡', label: 'Electrical Surge', obs: 'There was a loud pop and sparks from the outlet! The lights are flickering.' },
+        { type: 'gas_leak', icon: '💨', label: 'Gas Leak', obs: 'I smell gas in the kitchen near the stove!' },
+        { type: 'hvac_failure', icon: '❄️', label: 'HVAC Failure', obs: 'The AC stopped working and it\'s extremely hot inside!' },
+        { type: 'fire_smoke', icon: '🔥', label: 'Fire / Smoke', obs: 'I see smoke coming from the kitchen! Something is burning!' },
+        { type: 'carbon_monoxide', icon: '☠️', label: 'Carbon Monoxide', obs: 'The CO detector is beeping! I feel dizzy and nauseous.' },
+        { type: 'security_breach', icon: '🚨', label: 'Security Breach', obs: 'I heard glass breaking and the back door is open! I think someone broke in!' },
+        { type: 'flooding', icon: '🌊', label: 'Flooding', obs: 'The basement is flooding! Water is coming in from somewhere!' },
+        { type: 'appliance_malfunction', icon: '🔧', label: 'Appliance Issue', obs: 'The washing machine is shaking violently and leaking water everywhere!' },
+        { type: 'garage_door_malfunction', icon: '🚗', label: 'Garage Door', obs: 'The garage door won\'t close and is making grinding noises!' },
+        { type: 'pipe_burst', icon: '🔧', label: 'Pipe Burst', obs: 'A pipe burst under the kitchen sink! Water is spraying everywhere!' },
+    ];
+
+    let selectedEmergency = 'water_heater_rupture';
+
+    // Build emergency grid
+    function buildEmergencyGrid() {
+        const grid = document.getElementById('emergency-grid');
+        grid.innerHTML = EMERGENCY_TYPES.map(e => `
+            <div class="emergency-option ${e.type === selectedEmergency ? 'selected' : ''}"
+                 onclick="selectEmergency('${e.type}')">
+                <span class="em-icon">${e.icon}</span>
+                <span class="em-label">${e.label}</span>
+            </div>
+        `).join('');
+    }
+
+    function selectEmergency(type) {
+        selectedEmergency = type;
+        const em = EMERGENCY_TYPES.find(e => e.type === type);
+        document.getElementById('emergency-observation').value = em.obs;
+        document.getElementById('confirm-electrical-group').style.display =
+            type === 'electrical_surge' ? 'block' : 'none';
+        buildEmergencyGrid();
+    }
+
+    buildEmergencyGrid();
+
+    // ----- Tab switching -----
+    function switchTab(name) {
+        document.querySelectorAll('.card:first-of-type .tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.card:first-of-type .tab-content').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('tab-' + name).classList.add('active');
+    }
+
+    function switchRightTab(name) {
+        document.querySelectorAll('.card:last-of-type .tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.card:last-of-type .tab-content').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('rtab-' + name).classList.add('active');
+    }
+
+    // ----- API calls -----
+    const API_BASE = '';  // Same origin
+
+    async function apiCall(action, params) {
+        const resp = await fetch(API_BASE + '/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action, params }),
+        });
+        const data = await resp.json();
+
+        // Update last response
+        document.getElementById('last-response').textContent = JSON.stringify(data, null, 2);
+
+        // Refresh wire log
+        refreshWire();
+
+        return data;
+    }
+
+    // ----- Scam Check -----
+    async function runScamCheck() {
+        const btn = document.getElementById('btn-scam');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Analyzing...';
+
+        try {
+            const data = await apiCall('scam_check', {
+                transcript: document.getElementById('scam-transcript').value,
+                claimed_institution: document.getElementById('scam-institution').value,
+                caller_number: document.getElementById('scam-number').value,
+            });
+
+            const r = extractToolResult(data);
+            if (!r) { showError('scam-result', data); return; }
+
+            const level = r.threat_level || 'LOW_RISK';
+            const score = r.risk_score || 0;
+            const cls = score >= 60 ? 'critical' : (score >= 35 ? 'suspicious' : 'safe');
+            const gaugeClass = score >= 60 ? 'gauge-high' : (score >= 35 ? 'gauge-mid' : 'gauge-low');
+
+            let html = `
+                <div class="result-box result-${cls}">
+                    <div class="result-header">
+                        🛡️ SCAM FIREWALL: ${level} (${score}% Risk)
+                    </div>
+                    <div class="result-body">
+                        <div class="gauge-container">
+                            <div class="gauge-bar">
+                                <div class="gauge-fill ${gaugeClass}" style="width: ${score}%">${score}%</div>
+                            </div>
+                        </div>
+
+                        <div class="spoken-box">${r.spoken_interjection || ''}</div>
+
+                        <p style="margin-top:12px;"><strong>📞 Number Check:</strong>
+                        ${r.number_check ? (r.number_check.match === false ? '❌ MISMATCH — ' : (r.number_check.match === true ? '✅ Match — ' : '⚠️ ')) + (r.number_check.detail || '') : 'N/A'}</p>
+
+                        <p style="margin-top:12px;font-weight:600;">Detected Coercion Markers:</p>
+                        <ul class="markers-list">
+                            ${(r.matched_markers || []).map(m => `<li>⚠️ ${m}</li>`).join('')}
+                        </ul>
+
+                        <p style="margin-top:12px;font-weight:600;">Safe Next Steps:</p>
+                        <ul class="markers-list">
+                            ${(r.safe_next_steps || []).map(s => `<li>✅ ${s}</li>`).join('')}
+                        </ul>
+
+                        <p style="margin-top:12px;font-weight:600;">Counter Questions:</p>
+                        <ul class="markers-list">
+                            ${(r.counter_questions || []).map(q => `<li>🎯 ${q}</li>`).join('')}
+                        </ul>
+
+                        <p style="margin-top:8px;font-size:12px;color:var(--text-light);">
+                            Method: ${r.method} | Components simulated: ${(r.simulated_components || []).join(', ')}
+                        </p>
+                    </div>
+                </div>`;
+
+            document.getElementById('scam-result').innerHTML = html;
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '🚨 "Alexa, verify this caller with Aegis"';
+        }
+    }
+
+    // ----- Emergency -----
+    async function runEmergency() {
+        const btn = document.getElementById('btn-emergency');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Responding...';
+
+        try {
+            const params = {
+                emergency_type: selectedEmergency,
+                user_observation: document.getElementById('emergency-observation').value,
+            };
+            if (selectedEmergency === 'electrical_surge') {
+                params.confirm_electrical = document.getElementById('confirm-electrical').checked;
+            }
+
+            const data = await apiCall('emergency', params);
+            const r = extractToolResult(data);
+            if (!r) { showError('emergency-result', data); return; }
+
+            if (r.error) {
+                showError('emergency-result', r);
+                return;
+            }
+
+            let html = `
+                <div class="result-box result-info">
+                    <div class="result-header">
+                        🏠 EMERGENCY RESPONSE — ${(r.emergency_type || '').replace(/_/g, ' ').toUpperCase()}
+                        | Claim: ${r.claim_reference_id}
+                    </div>
+                    <div class="result-body">
+                        <div class="spoken-box">${r.safety_guidance || ''}</div>
+
+                        <p style="margin-top:12px;font-weight:600;">IoT Containment Actions [SIMULATED]:</p>
+                        <div class="progress-steps">
+                            ${(r.iot_containment_actions || []).map(a => `
+                                <div class="progress-step step-done">
+                                    <div class="step-icon">✓</div>
+                                    <span>${a}</span>
+                                </div>
+                            `).join('')}
+                            ${(r.iot_containment_actions || []).length === 0 ? '<p style="color:var(--text-light);font-size:13px;">No automatic IoT actions for this type. Manual action required.</p>' : ''}
+                        </div>
+
+                        <p style="margin-top:12px;font-weight:600;">Insurance Policy [SIMULATED]:</p>
+                        <table style="width:100%;font-size:13px;border-collapse:collapse;margin-top:6px;">
+                            <tr><td style="padding:4px 8px;background:#f5f5f5;font-weight:600;">Clause</td><td style="padding:4px 8px;">${r.policy_arbitration?.clause || 'N/A'}</td></tr>
+                            <tr><td style="padding:4px 8px;background:#f5f5f5;font-weight:600;">Covered</td><td style="padding:4px 8px;">${r.policy_arbitration?.covered ? '✅ Yes' : '❌ No'}</td></tr>
+                            <tr><td style="padding:4px 8px;background:#f5f5f5;font-weight:600;">Deductible</td><td style="padding:4px 8px;">$${r.policy_arbitration?.deductible_usd || 'N/A'}</td></tr>
+                            <tr><td style="padding:4px 8px;background:#f5f5f5;font-weight:600;">Warranty</td><td style="padding:4px 8px;">${r.policy_arbitration?.warranty_warning || 'N/A'}</td></tr>
+                            <tr><td style="padding:4px 8px;background:#f5f5f5;font-weight:600;">Dispatch</td><td style="padding:4px 8px;">${r.policy_arbitration?.dispatch_suggestion || 'N/A'}</td></tr>
+                        </table>
+
+                        <p style="margin-top:8px;font-size:12px;color:var(--text-light);">
+                            ${r.disclaimer || ''}
+                        </p>
+                    </div>
+                </div>`;
+
+            document.getElementById('emergency-result').innerHTML = html;
+
+            // Update IoT grid
+            if (r.current_iot_state) {
+                updateIoTGrid(r.current_iot_state);
+            }
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '🌊 Trigger Alexa+ Emergency Response';
+        }
+    }
+
+    // ----- Compile Claim -----
+    async function runCompileClaim() {
+        const btn = document.getElementById('btn-claim');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Compiling...';
+
+        try {
+            const claimId = document.getElementById('claim-id').value.trim();
+            const params = claimId ? { claim_reference_id: claimId } : {};
+
+            const data = await apiCall('compile_claim', params);
+            const r = extractToolResult(data);
+            if (!r) { showError('claim-result', data); return; }
+
+            if (r.error) {
+                showError('claim-result', r);
+                return;
+            }
+
+            document.getElementById('claim-result').innerHTML = `
+                <div class="result-box result-safe">
+                    <div class="result-header">📋 Claim Packet Compiled</div>
+                    <div class="result-body">
+                        <p><strong>Claim ID:</strong> ${r.claim_reference_id}</p>
+                        <p><strong>Status:</strong> ${r.status}</p>
+                        <p><strong>JSON:</strong> <code>${r.json_path}</code></p>
+                        <p><strong>PDF:</strong> <code>${r.pdf_path}</code></p>
+                        <p style="margin-top:8px;font-size:12px;color:var(--text-light);">${r.disclaimer || ''}</p>
+                    </div>
+                </div>`;
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '📋 Compile Forensic Claim Packet';
+        }
+    }
+
+    // ----- Reset -----
+    async function resetDemo() {
+        const resp = await fetch(API_BASE + '/reset', { method: 'POST' });
+        const data = await resp.json();
+        document.getElementById('scam-result').innerHTML = '';
+        document.getElementById('emergency-result').innerHTML = '';
+        document.getElementById('claim-result').innerHTML = '';
+        document.getElementById('iot-grid').innerHTML = '<div style="color:var(--text-light);">Demo reset. Run a scenario to see device states.</div>';
+        refreshWire();
+        alert('Demo reset complete!');
+    }
+
+    // ----- Wire log refresh -----
+    async function refreshWire() {
+        try {
+            const resp = await fetch(API_BASE + '/wire');
+            const entries = await resp.json();
+            if (!Array.isArray(entries) || entries.length === 0) {
+                document.getElementById('wire-log').innerHTML = '<div style="color:#a0aec0;">No wire entries yet.</div>';
+                return;
+            }
+            document.getElementById('wire-log').innerHTML = entries.slice(-30).reverse().map(e => `
+                <div class="wire-entry">
+                    <span class="wire-time">${e.timestamp ? new Date(e.timestamp).toLocaleTimeString() : ''}</span>
+                    <span class="wire-method">${e.http_method || ''}</span>
+                    <span class="wire-path">${e.path || ''}</span>
+                    <span class="wire-status wire-${e.status || ''}">${e.status || ''}</span>
+                    ${e.mcp_session_id ? `<span style="color:#b794f4;font-size:11px;"> sid:${e.mcp_session_id.substring(0, 8)}…</span>` : ''}
+                </div>
+            `).join('');
+        } catch (e) {
+            document.getElementById('wire-log').innerHTML = `<div style="color:#fc8181;">Error: ${e.message}</div>`;
+        }
+    }
+
+    // ----- IoT Grid -----
+    function updateIoTGrid(iotState) {
+        const grid = document.getElementById('iot-grid');
+        const normalStates = new Set(['OPEN', 'ACTIVE', 'RUNNING', 'AUTO', 'LOCKED', 'ARMED_HOME', 'RECORDING', 'NORMAL', 'STANDBY', 'IDLE', 'OFF', 'CLOSED']);
+
+        grid.innerHTML = Object.entries(iotState).map(([key, state]) => {
+            const isNormal = normalStates.has(state);
+            const isAction = state.includes('AEGIS');
+            const stateClass = isAction ? 'state-action' : (isNormal ? 'state-normal' : 'state-alert');
+            const name = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            return `
+                <div class="iot-device">
+                    <span class="dev-name">${name}</span>
+                    <span class="dev-state ${stateClass}">${state}</span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // ----- Helpers -----
+    function extractToolResult(data) {
+        // Navigate through the MCP JSON-RPC response structure
+        if (data?.result?.result?.content) {
+            const content = data.result.result.content;
+            if (Array.isArray(content) && content.length > 0) {
+                const text = content[0]?.text;
+                if (text) {
+                    try { return JSON.parse(text); } catch(e) { return { raw: text }; }
+                }
+            }
+        }
+        // Maybe it's directly the result
+        if (data?.result?.content) {
+            const content = data.result.content;
+            if (Array.isArray(content) && content.length > 0) {
+                const text = content[0]?.text;
+                if (text) {
+                    try { return JSON.parse(text); } catch(e) { return { raw: text }; }
+                }
+            }
+        }
+        // Or even simpler
+        if (data?.result) return data.result;
+        return data;
+    }
+
+    function showError(elementId, data) {
+        document.getElementById(elementId).innerHTML = `
+            <div class="result-box result-critical">
+                <div class="result-header">❌ Error</div>
+                <div class="result-body">
+                    <pre style="font-size:12px;white-space:pre-wrap;">${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            </div>`;
+    }
+
+    // Auto-refresh wire log every 5 seconds
+    setInterval(refreshWire, 5000);
+    refreshWire();
+</script>
+
+</body>
+</html>

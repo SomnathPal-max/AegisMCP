@@ -1,0 +1,1 @@
+# AegisMCP Host Package

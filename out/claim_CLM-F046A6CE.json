@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "generated_utc": "2026-10-23T10:55:24.817767+00:00",
+    "claim_reference_id": "CLM-F046A6CE",
+    "status": "DRAFT_FOR_YOUR_REVIEW",
+    "disclaimer": "This claim packet is a SIMULATED draft for review purposes only. It does not constitute legal or insurance advice. All sensor readings, device states, and policy data are SIMULATED."
+  },
+  "claim": {
+    "claim_reference_id": "CLM-F046A6CE",
+    "emergency_type": "water_heater_rupture",
+    "timestamp_utc": "2026-10-23T10:55:24.817049+00:00",
+    "safety_guidance": "1. Do NOT wade through standing water near any electrical outlets or appliances.\n2. Turn off power to the water heater at the breaker if safe to reach.\n3. If you smell gas, leave the house immediately and call emergency services.\n4. The main water valve will be closed automatically to stop flooding.",
+    "iot_containment_actions": [
+      "Closed main water shutoff valve [SIMULATED]",
+      "Closed water heater isolation valve [SIMULATED]"
+    ],
+    "current_iot_state": {
+      "main_water_valve": "CLOSED_BY_AEGIS",
+      "water_heater_valve": "CLOSED_BY_AEGIS",
+      "smart_breaker_main": "ACTIVE",
+      "smart_breaker_zone_3": "ACTIVE",
+      "gas_main_valve": "OPEN",
+      "gas_water_heater_valve": "OPEN",
+      "hvac_system": "RUNNING",
+      "hvac_thermostat": "AUTO",
+      "front_door_lock": "LOCKED",
+      "back_door_lock": "LOCKED",
+      "garage_door": "CLOSED",
+      "alarm_system": "ARMED_HOME",
+      "security_cameras": "RECORDING",
+      "smoke_detectors": "NORMAL",
+      "co_detectors": "NORMAL",
+      "sprinkler_system": "STANDBY",
+      "refrigerator": "RUNNING",
+      "washing_machine": "IDLE",
+      "dryer": "IDLE",
+      "dishwasher": "IDLE",
+      "oven": "OFF"
+    },
+    "sensor_snapshot": {
+      "basement_humidity_pct": 92.3,
+      "basement_temperature_f": 68.0,
+      "water_flow_rate_gpm": 8.5,
+      "water_pressure_psi": 15.0,
+      "gas_level_ppm": 0.0,
+      "co_level_ppm": 0.0,
+      "smoke_density_pct": 0.0,
+      "indoor_temperature_f": 72.0,
+      "outdoor_temperature_f": 58.0,
+      "electrical_load_kw": 4.2,
+      "voltage_v": 120.0,
+      "last_updated": "2026-10-23T10:55:24.817021+00:00",
+      "timestamp": "2026-10-23T10:55:24.817021+00:00",
+      "emergency_type": "water_heater_rupture",
+      "simulated": true
+    },
+    "policy_arbitration": {
+      "clause": "Section 4.2.b \u2014 Sudden & Accidental Discharge of Plumbing/Appliances [SIMULATED]",
+      "covered": true,
+      "deductible_usd": 500,
+      "warranty_warning": "CRITICAL: Do NOT unbolt the anode rod yourself; DIY disassembly voids the 10-year manufacturer warranty under Clause 9.1. [SIMULATED]",
+      "dispatch_suggestion": "RapidRooter 24/7 Emergency Plumbing (ETA ~22 min) [SIMULATED]"
+    },
+    "user_observation": "Water everywhere!",
+    "simulated_components": [
+      "iot_devices",
+      "sensors",
+      "insurance_policy",
+      "warranty_terms",
+      "dispatch_vendor"
+    ],
+    "disclaimer": "This is a SIMULATED emergency response. In a real emergency, call 911 or your local emergency services immediately."
+  },
+  "sensor_time_series": [
+    {
+      "basement_humidity_pct": 92.3,
+      "basement_temperature_f": 68.0,
+      "water_flow_rate_gpm": 8.5,
+      "water_pressure_psi": 15.0,
+      "gas_level_ppm": 0.0,
+      "co_level_ppm": 0.0,
+      "smoke_density_pct": 0.0,
+      "indoor_temperature_f": 72.0,
+      "outdoor_temperature_f": 58.0,
+      "electrical_load_kw": 4.2,
+      "voltage_v": 120.0,
+      "last_updated": "2026-10-23T10:55:24.817021+00:00",
+      "timestamp": "2026-10-23T10:55:24.817021+00:00",
+      "emergency_type": "water_heater_rupture",
+      "simulated": true
+    }
+  ],
+  "all_stored_analyses": {}
+}

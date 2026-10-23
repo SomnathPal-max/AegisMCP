@@ -1,0 +1,182 @@
+[
+  {
+    "id": "scam_01",
+    "label": "scam",
+    "transcript": "Ma'am, there is an active arrest warrant and unauthorized wire transfer on your account. Stay on the line immediately and transfer your balance to our Federal Reserve safe account or buy Apple gift cards to freeze the ledger. Read me your verification code now.",
+    "institution": "Chase",
+    "caller_number": "+1-800-555-0199",
+    "expected_level": "CRITICAL_SCAM",
+    "note": "Classic IRS/bank impersonation with multiple coercion markers"
+  },
+  {
+    "id": "scam_02",
+    "label": "scam",
+    "transcript": "This is the Social Security Administration. Your social security number has been suspended due to suspicious activity. You need to send money via Western Union immediately or face arrest.",
+    "institution": "Social Security Administration",
+    "caller_number": "+1-202-555-0000",
+    "expected_level": "CRITICAL_SCAM",
+    "note": "SSA impersonation with money transfer demand"
+  },
+  {
+    "id": "scam_03",
+    "label": "scam",
+    "transcript": "Hello, this is Microsoft Technical Support. We have detected a virus on your computer. Please install TeamViewer so we can fix it remotely. Do not hang up, this is urgent.",
+    "institution": "Microsoft",
+    "caller_number": "+1-888-555-0000",
+    "expected_level": "CRITICAL_SCAM",
+    "note": "Tech support scam with remote access"
+  },
+  {
+    "id": "scam_04",
+    "label": "scam",
+    "transcript": "Your Amazon account has been compromised. To verify your identity, read me the verification code we just sent to your phone. Stay on the line. Immediately.",
+    "institution": "Amazon",
+    "caller_number": "+1-888-555-1234",
+    "expected_level": "CRITICAL_SCAM",
+    "note": "Amazon impersonation with OTP harvesting"
+  },
+  {
+    "id": "scam_05",
+    "label": "scam",
+    "transcript": "This is your power company. Your electricity will be shut off in 30 minutes unless you pay the overdue balance with Bitcoin right now. Do not hang up.",
+    "institution": "Local Power Company",
+    "caller_number": "+1-800-555-9999",
+    "expected_level": "CRITICAL_SCAM",
+    "note": "Utility scam with cryptocurrency demand"
+  },
+  {
+    "id": "scam_06",
+    "label": "scam",
+    "transcript": "This is Wells Fargo fraud department. Someone has opened a safe account in your name. Wire transfer your savings to this temporary account immediately to protect them. Your account will be frozen if you don't act now.",
+    "institution": "Wells Fargo",
+    "caller_number": "+1-800-555-0001",
+    "expected_level": "CRITICAL_SCAM",
+    "note": "Safe account + wire transfer scam"
+  },
+  {
+    "id": "scam_07",
+    "label": "scam",
+    "transcript": "Hello, I'm calling from the IRS. You owe $5,000 in back taxes. If you don't buy gift cards and read us the numbers immediately, officers will be sent to your home with an arrest warrant.",
+    "institution": "IRS",
+    "caller_number": "+1-202-555-0101",
+    "expected_level": "CRITICAL_SCAM",
+    "note": "IRS impersonation with gift card demand"
+  },
+  {
+    "id": "scam_08",
+    "label": "scam",
+    "transcript": "Your computer has a virus. Install AnyDesk right now so I can help you. Send money to our safe account. Don't tell anyone about this call.",
+    "institution": "Microsoft",
+    "caller_number": "+1-800-555-0002",
+    "expected_level": "CRITICAL_SCAM",
+    "note": "Tech scam with remote access + money demand"
+  },
+  {
+    "id": "legit_01",
+    "label": "legitimate",
+    "transcript": "Hello, this is Chase Bank calling about a recent transaction on your account. We will never ask for your password. If you'd like to verify, please hang up and call the number on your card.",
+    "institution": "Chase",
+    "caller_number": "+1-800-935-9935",
+    "expected_level": "LOW_RISK",
+    "note": "Legitimate bank call with proper disclaimers"
+  },
+  {
+    "id": "legit_02",
+    "label": "legitimate",
+    "transcript": "This is Bank of America. We noticed an unusual charge on your debit card. We will never ask for your password. Please hang up and call us back at the number on our website. Take your time.",
+    "institution": "Bank of America",
+    "caller_number": "+1-800-432-1000",
+    "expected_level": "LOW_RISK",
+    "note": "Legitimate bank with de-escalation phrases"
+  },
+  {
+    "id": "legit_03",
+    "label": "legitimate",
+    "transcript": "Hello, this is your pharmacy calling to let you know your prescription is ready for pickup. Have a great day!",
+    "institution": "Local Pharmacy",
+    "caller_number": "+1-555-123-4567",
+    "expected_level": "LOW_RISK",
+    "note": "Non-financial legitimate call"
+  },
+  {
+    "id": "legit_04",
+    "label": "legitimate",
+    "transcript": "Hi, this is Dr. Smith's office confirming your appointment for Tuesday at 2 PM. Please call us back if you need to reschedule.",
+    "institution": "Doctor's Office",
+    "caller_number": "+1-555-987-6543",
+    "expected_level": "LOW_RISK",
+    "note": "Medical appointment reminder"
+  },
+  {
+    "id": "legit_05",
+    "label": "legitimate",
+    "transcript": "Hello, this is your local gas company. We're scheduling routine maintenance in your area next Tuesday. No action needed on your part. Call us if you have questions.",
+    "institution": "Local Gas Company",
+    "caller_number": "+1-800-555-0200",
+    "expected_level": "LOW_RISK",
+    "note": "Legitimate utility notification"
+  },
+  {
+    "id": "legit_06",
+    "label": "legitimate",
+    "transcript": "This is Wells Fargo. We noticed a purchase at an electronics store. Was this you? If not, please hang up and call the number on your card to dispute.",
+    "institution": "Wells Fargo",
+    "caller_number": "+1-800-869-3557",
+    "expected_level": "LOW_RISK",
+    "note": "Legitimate fraud check with proper guidance"
+  },
+  {
+    "id": "legit_07",
+    "label": "legitimate",
+    "transcript": "Hi, this is Amazon delivery. Your package will arrive between 2 and 4 PM today. Thank you for your order.",
+    "institution": "Amazon",
+    "caller_number": "+1-888-280-4331",
+    "expected_level": "LOW_RISK",
+    "note": "Legitimate delivery notification"
+  },
+  {
+    "id": "legit_08",
+    "label": "legitimate",
+    "transcript": "Good morning, this is your home security company. Your system's annual inspection is due. Would you like to schedule an appointment?",
+    "institution": "Home Security",
+    "caller_number": "+1-800-555-0300",
+    "expected_level": "LOW_RISK",
+    "note": "Legitimate maintenance call"
+  },
+  {
+    "id": "ambig_01",
+    "label": "ambiguous",
+    "transcript": "Hello, this is Chase. We need to verify your identity for a recent transaction. Can you confirm your account number?",
+    "institution": "Chase",
+    "caller_number": "+1-800-935-9935",
+    "expected_level": "SUSPICIOUS",
+    "note": "Could be legitimate but asks for account details — suspicious but number matches"
+  },
+  {
+    "id": "ambig_02",
+    "label": "ambiguous",
+    "transcript": "This is your insurance company. There's an issue with your claim. We need you to call us back immediately at this number.",
+    "institution": "Insurance",
+    "caller_number": "+1-800-555-0400",
+    "expected_level": "SUSPICIOUS",
+    "note": "Uses 'immediately' but context is plausible"
+  },
+  {
+    "id": "ambig_03",
+    "label": "ambiguous",
+    "transcript": "Hello, I'm calling from Medicare about your benefits. We need to update your information. Can you verify your Social Security number?",
+    "institution": "Medicare",
+    "caller_number": "+1-800-555-0500",
+    "expected_level": "SUSPICIOUS",
+    "note": "Medicare impersonation but low-key — SSN request is suspicious"
+  },
+  {
+    "id": "ambig_04",
+    "label": "ambiguous",
+    "transcript": "This is your bank. We've frozen your account due to suspicious activity. Please stay on the line while we transfer you to our security team.",
+    "institution": "Chase",
+    "caller_number": "+1-800-555-0600",
+    "expected_level": "SUSPICIOUS",
+    "note": "Uses stay on the line + number doesn't match official Chase numbers"
+  }
+]

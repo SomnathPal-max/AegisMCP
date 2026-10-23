@@ -34,3 +34,7 @@ out/*.log
 out/*.jsonl
 !out/.gitkeep
 
+# Temporary PDF previews
+docs/page_*.png
+
+

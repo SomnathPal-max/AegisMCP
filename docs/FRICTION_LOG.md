@@ -68,3 +68,16 @@
 - **Severity**: High (Blocked subsequent client tool calls once a session timed out).
 - **Workaround Used**: Updated `host/app.py` with automatic session fault tolerance: upon receiving a 404 or `Session not found`, the client immediately resets `_session_id = None`, performs a fresh `initialize` + `notifications/initialized` handshake, and transparently retries the original tool call. Additionally configured `session_idle_timeout=3600.0` on the server.
 - **Actionable Suggestion**: FastMCP clients should incorporate built-in automatic session recovery middleware when communicating over stateful Streamable HTTP transports.
+
+---
+
+### Friction Log #6: Native allowed_origins Configuration Parameter in FastMCP's mcp.run(transport="streamable-http") Initialization
+- **Date**: 2026-10-23
+- **Component**: FastMCP Python SDK / Streamable HTTP Transport (Spec 2025-11-25)
+- **Priority**: Important
+- **Description**: Native `allowed_origins` configuration parameter in FastMCP's `mcp.run(transport="streamable-http")` initialization.
+- **Why it matters to our project**: When building our local browser-based simulated Alexa+ UI to connect to our local Streamable HTTP MCP server (spec 2025-11-25), the client was completely blocked by HTTP 403 Forbidden errors due to strict Origin header validation. We had to write a custom Starlette OriginGuard ASGI middleware to bypass this for localhost. A native configuration parameter would save developers hours of debugging when building web-based agent simulators.
+- **Observed Behavior**: In the official `2025-11-25` Streamable HTTP specification, browser-based agent interfaces (e.g. localhost UI running on port 8080 connecting to MCP server on port 8000) send an `Origin: http://localhost:8080` header. FastMCP's default Streamable HTTP server rejects cross-origin requests with `HTTP 403 Forbidden`, with no clean top-level `allowed_origins` argument exposed in `FastMCP(...)` or `mcp.run(...)`.
+- **Workaround Implemented**: Created a custom Starlette ASGI middleware layer (`server/origin_guard.py`) wrapped via `mcp.http_app(middleware=[Middleware(OriginGuard)])` to validate and permit legitimate localhost/loopback origins (`http://localhost:*`, `http://127.0.0.1:*`) while rejecting untrusted external domains to protect against DNS-rebinding attacks. Also packaged this solution into `packages/mcp-streamable-crisis-kit/` for the community.
+- **Actionable Suggestion / Feature Request**: Expose `allowed_origins: list[str] = ["http://localhost:*", "http://127.0.0.1:*"]` directly in `FastMCP()`, `mcp.run(transport="streamable-http", allowed_origins=...)`, and `mcp.http_app(allowed_origins=...)`. This would allow developers to configure trusted web frontends with a single argument rather than manually digging into Starlette middleware stacks.
+

@@ -180,6 +180,19 @@ As part of the Open Source Mini Challenge ($5,000), this repository includes a s
 
 ---
 
-## 8. Disclaimer
+## 8. Hackathon Friction Logs (Track 2 Submission)
+
+Full developer friction logs documenting real engineering challenges, workarounds, and actionable SDK feature requests are recorded in [**FRICTION_LOG.md**](FRICTION_LOG.md) and [docs/FRICTION_LOG.md](docs/FRICTION_LOG.md):
+
+1. **Windows Loopback Socket Permissions**: WinError 10013 socket binding in sandboxed agent environments.
+2. **Windows CP1252 Console Output**: Standard output crash on multi-byte unicode emojis.
+3. **ReportLab Type 1 Unicode Glyphs**: Font rendering failures on unicode punctuation in PDF claim reports.
+4. **Strands SDK Import Namespace Divergence**: Graceful fallback routing when Bedrock dependencies diverge.
+5. **FastMCP Streamable HTTP Session Invalidation**: Auto-reconnect handling for HTTP 404 Session Not Found.
+6. **Native llowed_origins in FastMCP Streamable HTTP**: Top-level CORS/Origin parameter needed in mcp.run(transport='streamable-http') to avoid manual ASGI middleware for localhost web clients.
+
+---
+
+## 9. Disclaimer
 
 AegisMCP is an academic/hackathon prototype developed for the Amazon Developer Hackathon. It does not provide certified legal, insurance, or emergency dispatch services. All smart home devices, telemetry streams, and insurer responses are **SIMULATED**. In any genuine emergency, call 911 or your local emergency services immediately.

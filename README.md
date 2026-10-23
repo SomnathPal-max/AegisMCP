@@ -1,7 +1,5 @@
 # AegisMCP: Autonomous Household Crisis Assistant & Scam Firewall for Alexa+
-
-> **Build, Ship, Shape: Amazon Developer Hackathon**  
-> **Track**: Alexa+ Track ($25,000) • **Mini Challenges**: AWS Builder ($5,000) & Open Source ($5,000)  
+ 
 > **MCP Specification**: `2025-11-25` Streamable HTTP (`/mcp`)  
 > **License**: MIT
 

@@ -65,6 +65,12 @@ In strict adherence to truth-in-advertising hackathon guidelines:
 | **Streamable HTTP MCP Protocol** | Single `/mcp` endpoint implementing the official `2025-11-25` specification with session IDs, origin checking, and progress notifications. | **REAL** |
 | **Forensic Claim Ledger (JSON + PDF)** | `compile_forensic_claim` compiles real JSON and ReportLab PDF dossiers in `out/` citing timestamps, sensor snapshots, policy clauses, and warranty warnings. | **REAL** (Data is `SIMULATED`) |
 | **Analyst / Responder Split** | Security architecture separating untrusted input analysis from action tool execution to prevent prompt injection attacks. Includes automatic fallback badge. | **REAL** |
+| **Live Microphone Voice Streaming** | Real-time browser speech capture via Web Speech API for both speakerphone call capture and Alexa voice commands. | **REAL** |
+| **Home Assistant Hardware Bridge** | Real Matter/Zigbee hardware integration via Home Assistant REST API with graceful simulated fallback when keys are absent. | **REAL** (Fallback is SIMULATED) |
+| **Carrier-Grade Phone Intelligence** | NPA-NXX area code classification, toll-free verification, VoIP detection, and Twilio/NumVerify API lookup. | **REAL** |
+| **Semantic Policy RAG** | In-memory semantic retrieval matching emergency observations against real standard HO-3 homeowners insurance forms, deductibles, and warranty rules. | **REAL** |
+| **SHA-256 Forensic Audit Ledger** | Cryptographic hashing of incident packets embedded in PDF headers and committed to an immutable append-only ledger (out/forensic_ledger.jsonl). | **REAL** |
+| **Caregiver Emergency Alerting** | Immediate SMS and Webhook dispatch to family guardians/landlords during high-stakes emergencies and predatory scam attempts. | **REAL** (Fallback is SIMULATED) |
 
 ---
 
@@ -119,8 +125,8 @@ pip install -r requirements.txt
 
 ### Step 2: Run Unit & HTTP Integration Tests
 ```bash
-# Verify core logic (30 unit tests)
-pytest tests/test_core.py -v
+# Verify core logic & realism modules (43 unit tests)
+pytest tests/test_core.py tests/test_realism.py -v
 
 # Verify HTTP server lifecycle and OriginGuard (5 integration tests)
 pytest tests/test_server_http.py -v

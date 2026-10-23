@@ -1,0 +1,153 @@
+{
+  "policy_meta": {
+    "policy_form": "HO-3 Special Form (Standard Homeowners Policy)",
+    "insurer": "Aegis Mutual Household Underwriters [SIMULATED]",
+    "policy_number": "POL-2026-9812-HG",
+    "effective_year": 2026
+  },
+  "clauses": [
+    {
+      "id": "SEC_4_2_B",
+      "section": "Section 4.2.b",
+      "title": "Sudden and Accidental Discharge of Water or Steam",
+      "category": "plumbing",
+      "keywords": ["water", "heater", "rupture", "leak", "pipe", "plumbing", "burst", "furnace", "pooling", "flood", "tank"],
+      "text": "Covers sudden and accidental discharge or overflow of water or steam from within a plumbing, heating, air conditioning, or household appliance system.",
+      "covered": true,
+      "deductible_usd": 500,
+      "warranty_warning": "CRITICAL: Do NOT unbolt the anode rod or burner assembly yourself; DIY disassembly voids manufacturer warranty under Clause 9.1.",
+      "dispatch": "RapidRooter 24/7 Emergency Plumbing (Direct-Bill Approved, ETA ~22 min)",
+      "diy_voids_warranty": true
+    },
+    {
+      "id": "SEC_4_1_A",
+      "section": "Section 4.1.a",
+      "title": "Freezing of Plumbing and Sudden Pipe Rupture",
+      "category": "plumbing",
+      "keywords": ["pipe", "burst", "frozen", "spraying", "sink", "wall", "plumbing"],
+      "text": "Covers burst and cracked water pipes caused by pressure surges or freezing, provided heat was maintained in the dwelling.",
+      "covered": true,
+      "deductible_usd": 500,
+      "warranty_warning": "Temporary pipe clamps are acceptable to stop flow. Do not attempt torch soldering or DIY pipe cutting.",
+      "dispatch": "RapidRooter 24/7 Emergency Plumbing (ETA ~20 min)",
+      "diy_voids_warranty": false
+    },
+    {
+      "id": "SEC_6_1_A",
+      "section": "Section 6.1.a",
+      "title": "Power Surge, Arc Fault & Smart Electrical Panel",
+      "category": "electrical",
+      "keywords": ["electrical", "surge", "spark", "breaker", "panel", "outlet", "lights", "flickering", "pop", "voltage"],
+      "text": "Covers sudden and accidental damage to built-in wiring, distribution panels, and connected appliances caused by utility power surges.",
+      "covered": true,
+      "deductible_usd": 250,
+      "warranty_warning": "Preserve damaged breaker trip logs in smart panel telemetry memory for insurance adjuster inspection.",
+      "dispatch": "VoltGuard Certified Electricians (ETA ~35 min)",
+      "diy_voids_warranty": false
+    },
+    {
+      "id": "SEC_7_3_A",
+      "section": "Section 7.3.a",
+      "title": "Natural Gas Supply Line Rupture & Emergency Mitigation",
+      "category": "gas",
+      "keywords": ["gas", "leak", "smell", "odor", "stove", "hissing", "natural gas", "rotten egg", "sulfur"],
+      "text": "Covers emergency gas shutoff and repair of customer-owned interior gas piping following accidental damage or fitting rupture.",
+      "covered": true,
+      "deductible_usd": 0,
+      "warranty_warning": "Gas line repair must be certified by a licensed master gas fitter. DIY repair voids coverage and violates local municipal fire code.",
+      "dispatch": "Local Gas Utility Emergency Dispatch + Licensed Gas Fitter (ETA ~15 min)",
+      "diy_voids_warranty": true
+    },
+    {
+      "id": "SEC_7_4_B",
+      "section": "Section 7.4.b",
+      "title": "Carbon Monoxide Evacuation and Appliance Combustion Inspection",
+      "category": "gas",
+      "keywords": ["carbon", "monoxide", "co", "detector", "alarm", "beeping", "dizziness", "nausea", "headache", "combustion"],
+      "text": "Provides coverage for professional boiler, furnace, and venting flue combustion testing following a hazardous CO event.",
+      "covered": true,
+      "deductible_usd": 0,
+      "warranty_warning": "Do not attempt to restart gas boilers or furnaces until inspected by certified HVAC technician.",
+      "dispatch": "Call 911 Immediately. Fire Department Hazmat + Certified Flue Inspector.",
+      "diy_voids_warranty": true
+    },
+    {
+      "id": "SEC_2_1_A",
+      "section": "Section 2.1.a",
+      "title": "Fire, Smoke & Soot Damage Mitigation",
+      "category": "fire",
+      "keywords": ["fire", "smoke", "flame", "burning", "kitchen", "soot", "sprinkler"],
+      "text": "Covers direct physical loss resulting from fire or smoke, including water damage caused by fire suppression sprinkler systems.",
+      "covered": true,
+      "deductible_usd": 500,
+      "warranty_warning": "Document all damage with photos before cleanup. Do not discard charred appliances until claims adjuster inspection.",
+      "dispatch": "Call 911 IMMEDIATELY. Municipal Fire Department Dispatch.",
+      "diy_voids_warranty": false
+    },
+    {
+      "id": "SEC_8_2_A",
+      "section": "Section 8.2.a",
+      "title": "Forced Entry, Burglary & Vandalism",
+      "category": "security",
+      "keywords": ["break", "broken", "window", "door", "glass", "intruder", "burglar", "theft", "forced entry", "alarm"],
+      "text": "Covers physical damage to doors, windows, and perimeter locks caused by forced entry or attempted burglary.",
+      "covered": true,
+      "deductible_usd": 500,
+      "warranty_warning": "File a formal police report within 24 hours to preserve insurance claim eligibility. Preserve physical evidence.",
+      "dispatch": "Call 911 Immediately. Local Police Department Dispatch.",
+      "diy_voids_warranty": false
+    },
+    {
+      "id": "SEC_3_1_A",
+      "section": "Section 3.1.a",
+      "title": "Interior Water Damage & Appliance Overflow",
+      "category": "flooding",
+      "keywords": ["flood", "flooding", "water", "damage", "basement", "overflow", "pooling", "sump"],
+      "text": "Covers accidental discharge or overflow from washing machines, dishwashers, and internal plumbing fixtures.",
+      "covered": true,
+      "deductible_usd": 750,
+      "warranty_warning": "Professional drying and water extraction must commence within 48 hours to prevent mold exclusion from applying.",
+      "dispatch": "AquaRestore Water Extraction Specialists (ETA ~30 min)",
+      "diy_voids_warranty": false
+    },
+    {
+      "id": "SEC_5_1_C",
+      "section": "Section 5.1.c",
+      "title": "Mechanical Breakdown: Central Heating & Air Conditioning",
+      "category": "hvac",
+      "keywords": ["hvac", "ac", "air condition", "heat", "heating", "furnace", "cold", "hot", "compressor", "fan"],
+      "text": "Covers central HVAC compressor and heat-pump mechanical breakdown under the home systems protection endorsement.",
+      "covered": true,
+      "deductible_usd": 200,
+      "warranty_warning": "Attempting manual compressor jump-starting or non-certified refrigerant recharge voids manufacturer 5-year parts warranty.",
+      "dispatch": "ClimateGuard HVAC Certified Technicians (ETA ~45 min)",
+      "diy_voids_warranty": true
+    },
+    {
+      "id": "SEC_5_4_A",
+      "section": "Section 5.4.a",
+      "title": "Garage Door Opener Mechanism & Torsion Spring Failure",
+      "category": "garage",
+      "keywords": ["garage", "door", "grinding", "spring", "stuck", "opener", "cable", "track"],
+      "text": "Covers motorized garage door opener gear failure and accidental track impact under equipment breakdown riders.",
+      "covered": true,
+      "deductible_usd": 100,
+      "warranty_warning": "Garage door torsion springs are under lethal mechanical tension. Never attempt DIY spring replacement or adjustment.",
+      "dispatch": "DoorSafe Garage Door Mechanics (ETA ~1 hour)",
+      "diy_voids_warranty": true
+    },
+    {
+      "id": "SEC_5_3_B",
+      "section": "Section 5.3.b",
+      "title": "Major Household Appliance Electrical/Mechanical Breakdown",
+      "category": "appliance",
+      "keywords": ["appliance", "washer", "dryer", "refrigerator", "fridge", "dishwasher", "shaking", "grinding", "oven"],
+      "text": "Covers sudden mechanical or electrical breakdown of major registered home appliances not caused by normal wear and tear.",
+      "covered": true,
+      "deductible_usd": 150,
+      "warranty_warning": "Unplug the unit. Disassembling internal motor housings or sealed refrigeration loops voids manufacturer warranty.",
+      "dispatch": "AppliancePro Repair Network (ETA ~2 hours)",
+      "diy_voids_warranty": true
+    }
+  ]
+}

@@ -13,12 +13,19 @@ from __future__ import annotations
 
 import copy
 import datetime
+import hashlib
 import json
 import os
 import threading
 import uuid
 from pathlib import Path
 from typing import Any
+
+from server.phone_intel import lookup_phone_intelligence
+from server.hass_bridge import dispatch_hardware_containment_sync
+from server.policy_rag import get_policy_rag
+from server.caregiver_notifier import dispatch_caregiver_alert
+
 
 # ---------------------------------------------------------------------------
 # Thread-safe state lock
@@ -416,6 +423,25 @@ def analyze_live_scam_call(
             "Cannot cross-check number."
         )
 
+    # Carrier intelligence inspection
+    carrier_intel = None
+    if caller_number and caller_number not in ("Unknown", ""):
+        carrier_intel = lookup_phone_intelligence(caller_number, claimed_institution)
+        if carrier_intel.get("is_voip"):
+            matched.append({
+                "phrase": "VoIP Virtual Line",
+                "reason": "Virtual VoIP carrier line detected -- high correlation with predatory call centers",
+                "weight": 20,
+            })
+            score += 20
+        elif carrier_intel.get("line_type") == "international":
+            matched.append({
+                "phrase": "International Routing",
+                "reason": "International caller ID claiming domestic US financial institution",
+                "weight": 25,
+            })
+            score += 25
+
     score = max(0, min(score, 99))
 
     if score >= 60:
@@ -424,6 +450,15 @@ def analyze_live_scam_call(
         threat_level = "SUSPICIOUS"
     else:
         threat_level = "LOW_RISK"
+
+    # Emergency Caregiver Alert for severe scam calls
+    caregiver_alert = None
+    if score >= 50:
+        caregiver_alert = dispatch_caregiver_alert(
+            incident_type="scam_call_attempt",
+            severity="CRITICAL" if score >= 60 else "WARNING",
+            summary=f"Impersonation of {claimed_institution} detected (Risk {score}%) targeting resident",
+        )
 
     if score >= 50:
         spoken = (
@@ -461,6 +496,8 @@ def analyze_live_scam_call(
             f"Ask the caller: 'What are the last 4 digits of my {claimed_institution} account?'",
             "Say: 'I am hanging up now and calling the official number on the back of my card.'",
         ],
+        "carrier_intelligence": carrier_intel,
+        "caregiver_alert": caregiver_alert,
         "simulated_components": ["phone_directory"],
     }
 
@@ -554,7 +591,21 @@ def arbitrate_home_emergency(
             if any("water" in a.lower() and "closed" in a.lower() for a in actions_taken):
                 SENSOR_STATE["water_flow_rate_gpm"] = 0.0
 
-        # 4. Generate claim reference
+        # 4. Semantic Policy RAG lookup
+        rag_engine = get_policy_rag()
+        rag_summary = rag_engine.get_coverage_summary(emergency_type, user_observation)
+
+        # 5. Home Assistant Hardware Bridge Dispatch (Matter/Zigbee)
+        hardware_dispatch = dispatch_hardware_containment_sync(emergency_type, confirm_electrical)
+
+        # 6. Caregiver / Family Emergency Alerting
+        caregiver_alert = dispatch_caregiver_alert(
+            incident_type=emergency_type,
+            severity="CRITICAL" if emergency_type in ("fire_smoke", "gas_leak", "carbon_monoxide") else "WARNING",
+            summary=f"Incident {emergency_type.replace('_', ' ').title()}: actions taken: {', '.join(actions_taken[:2])}",
+        )
+
+        # 7. Generate claim reference
         claim_id = f"CLM-{uuid.uuid4().hex[:8].upper()}"
 
         result = {
@@ -566,12 +617,18 @@ def arbitrate_home_emergency(
             "current_iot_state": {k: v["state"] for k, v in IOT_STATE.items()},
             "sensor_snapshot": sensor_snapshot,
             "policy_arbitration": {
-                "clause": policy["clause"],
+                "clause": rag_summary.get("clause_title") or policy["clause"],
+                "clause_id": rag_summary.get("clause_id"),
                 "covered": policy["covered"],
-                "deductible_usd": policy["deductible_usd"],
-                "warranty_warning": policy["warranty_warning"],
-                "dispatch_suggestion": policy["dispatch_suggestion"],
+                "deductible_usd": rag_summary.get("deductible_usd") if rag_summary.get("deductible_usd") is not None else policy["deductible_usd"],
+                "warranty_warning": rag_summary.get("warranty_warning") or policy["warranty_warning"],
+                "dispatch_suggestion": rag_summary.get("dispatch") or policy["dispatch_suggestion"],
+                "mitigation_mandate": rag_summary.get("mitigation_mandate"),
+                "source": rag_summary.get("source"),
             },
+            "policy_rag": rag_summary,
+            "hardware_bridge": hardware_dispatch,
+            "caregiver_alert": caregiver_alert,
             "user_observation": user_observation,
             "simulated_components": [
                 "iot_devices", "sensors", "insurance_policy",
@@ -632,6 +689,29 @@ def compile_forensic_claim(claim_reference_id: str | None = None) -> dict[str, A
             "all_stored_analyses": dict(_STORED_ANALYSES),
         }
 
+        # Cryptographic SHA-256 Tamper-Evident Digest
+        canonical_payload = json.dumps(
+            {"claim": claim_data, "sensor_time_series": SENSOR_SERIES},
+            sort_keys=True,
+            default=str,
+        ).encode("utf-8")
+        forensic_sha256 = hashlib.sha256(canonical_payload).hexdigest()
+        packet["meta"]["forensic_hash_sha256"] = forensic_sha256
+
+    # Write immutable ledger record
+    ledger_path = out_dir / "forensic_ledger.jsonl"
+    try:
+        with open(ledger_path, "a", encoding="utf-8") as lf:
+            lf.write(json.dumps({
+                "timestamp_utc": _now_utc(),
+                "claim_reference_id": claim_reference_id,
+                "emergency_type": claim_data.get("emergency_type", "UNKNOWN"),
+                "forensic_hash_sha256": forensic_sha256,
+                "tamper_evident_status": "COMMITTED_IMMUTABLE",
+            }) + "\n")
+    except Exception:
+        pass
+
     # Write JSON
     json_path = out_dir / f"claim_{claim_reference_id}.json"
     with open(json_path, "w", encoding="utf-8") as f:
@@ -646,6 +726,8 @@ def compile_forensic_claim(claim_reference_id: str | None = None) -> dict[str, A
         "status": "DRAFT_FOR_YOUR_REVIEW",
         "json_path": str(json_path),
         "pdf_path": str(pdf_path),
+        "forensic_hash_sha256": forensic_sha256,
+        "tamper_evident_ledger": str(ledger_path),
         "disclaimer": packet["meta"]["disclaimer"],
     }
 
@@ -687,11 +769,15 @@ def _write_claim_pdf(pdf_path: Path, packet: dict) -> None:
         elements.append(Spacer(1, 12))
         elements.append(Paragraph(
             f"<b>Claim ID:</b> {meta['claim_reference_id']} &nbsp;&nbsp; "
-            f"<b>Generated:</b> {meta['generated_utc']}", body_style))
+            f"<b>Generated:</b> {meta['generated_utc']}<br/>"
+            f"<b>Forensic Digest (SHA-256):</b> <font name='Courier' size=7>{meta.get('forensic_hash_sha256', 'N/A')}</font>",
+            body_style,
+        ))
         elements.append(Spacer(1, 6))
         elements.append(Paragraph(
-            "[SIMULATED] -- Draft for your review. Not legal or insurance advice.",
-            warning_style))
+            "[SIMULATED] -- Draft for your review. Not legal or insurance advice. Immutable audit ledger entry committed.",
+            warning_style,
+        ))
         elements.append(Spacer(1, 18))
 
         # Emergency details

@@ -26,3 +26,11 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Generated incident outputs
+out/*.json
+out/*.pdf
+out/*.log
+out/*.jsonl
+!out/.gitkeep
+

@@ -54,3 +54,17 @@
 - **Severity**: Medium
 - **Workaround Used**: Our architecture cleanly intercepted the import failure, seamlessly routed calls through the FastMCP Streamable HTTP keyword fallback client, and activated the `fallback_badge: true` indicator in the response payload.
 - **Actionable Suggestion**: Ensure the starter templates clearly document the exact PyPI package distribution name vs module import namespaces.
+
+
+---
+
+### Friction Log #5: MCP Streamable HTTP Session Invalidation (HTTP 404 Session Not Found)
+- **Date**: 2026-10-23
+- **Task Attempted**: Sending an emergency arbitration request from the Alexa+ console after an idle interval or server restart.
+- **Steps Taken**: Executed `POST /chat` from UI -> Host backend sent `POST /mcp` with previously held `Mcp-Session-Id` header.
+- **Expected vs Actual**:
+  - *Expected*: Request executes or server transparently handles the stale session.
+  - *Actual Error*: `MCP server returned 404: {"jsonrpc":"2.0","id":null,"error":{"code":-32600,"message":"Session not found"}}`
+- **Severity**: High (Blocked subsequent client tool calls once a session timed out).
+- **Workaround Used**: Updated `host/app.py` with automatic session fault tolerance: upon receiving a 404 or `Session not found`, the client immediately resets `_session_id = None`, performs a fresh `initialize` + `notifications/initialized` handshake, and transparently retries the original tool call. Additionally configured `session_idle_timeout=3600.0` on the server.
+- **Actionable Suggestion**: FastMCP clients should incorporate built-in automatic session recovery middleware when communicating over stateful Streamable HTTP transports.
